@@ -35,14 +35,14 @@ struct dpackage {
 
 
 // Replace the next variables with your SSID/Password combination
-const char* ssid = "Somkiat_2.4G";
-const char* password = "0818187888";
+const char* ssid = "YOUR_WIFI";
+const char* password = "YOUR_WIFI_PWD";
 
 // MQTT Broker
 const char *mqtt_broker = "broker.emqx.io";
-const char *topic = "esp32/scos";
-const char *mqtt_username = "cosnxcils";
-const char *mqtt_password = "cils2023";
+const char *topic = "xxx/xxx"; //your topic
+const char *mqtt_username = "xxxxx";
+const char *mqtt_password = "xxxx";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
