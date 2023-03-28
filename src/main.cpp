@@ -5,7 +5,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-#define BATPIN      35
+#define BATPIN      33
 #define DHTPIN      17    
 #define DHTTYPE    DHT22    
 
@@ -23,7 +23,7 @@ bool isSucces;
 
 struct dpackage {
   uint32_t UID;
-  uint32_t bat;
+  float bat;
   float data1;
   float data2;
   float data3;
@@ -35,14 +35,14 @@ struct dpackage {
 
 
 // Replace the next variables with your SSID/Password combination
-const char* ssid = "YOUR_WIFI";
-const char* password = "YOUR_WIFI_PWD";
+const char* ssid = "Somkiat_2.4G";
+const char* password = "0818187888";
 
 // MQTT Broker
 const char *mqtt_broker = "broker.emqx.io";
-const char *topic = "xxx/xxx"; //your topic
-const char *mqtt_username = "xxxxx";
-const char *mqtt_password = "xxxx";
+const char *topic = "esp32/scos";
+const char *mqtt_username = "cosnxcils";
+const char *mqtt_password = "cils2023";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
@@ -51,7 +51,7 @@ PubSubClient client(espClient);
 void callback(char *topic, byte *payload, unsigned int length);
 
 void setup() {
-  Serial.begin(115200);
+  // Serial.begin(115200);
 
   // Serial.println("---------------Wakeup-----------------");
 
@@ -86,8 +86,7 @@ void setup() {
       }
   }
 
-  message.bat = analogRead(BATPIN);
-  Serial.println(analogRead(BATPIN));
+  // Serial.println(analogRead(BATPIN));
   // publish and subscribe
   // client.publish(topic, "Hi EMQX I'm ESP32 ^^");
   // client.subscribe(topic);
@@ -108,6 +107,9 @@ void setup() {
 
 float tempBuff[num_of_sample];
 float humiBuff[num_of_sample];
+
+float vOUT = 0.0;
+int value = 0;
 
 void loop() {
   if(num_of_index<num_of_sample) {
@@ -152,6 +154,19 @@ void loop() {
 
     message.data1 = temp;
     message.data2 = humi;
+
+    value = analogRead(BATPIN);
+    message.bat = value*5.21/1023;
+
+    // Serial.print(value);
+    // Serial.print(" ");
+    // Serial.print(message.UID);
+    // Serial.print(" ");
+    // Serial.print(message.data1);
+    // Serial.print(" ");
+    // Serial.print(message.data2);
+    // Serial.print(" ");
+    // Serial.println((float) message.bat);
 
     client.publish(topic, (uint8_t*) &message, sizeof(message), false);
     isSucces = client.subscribe(topic);
